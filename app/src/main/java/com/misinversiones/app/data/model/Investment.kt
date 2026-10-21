@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 data class Investment(
     val name: String = "",
     val category: String = "Otros",
+    val isin: String = "",
     val link: String = "",
     val amount: Double = 0.0,
     val roi: Double = 0.0,
@@ -27,6 +28,7 @@ data class Investment(
     fun toMap(): Map<String, Any?> = mapOf(
         "name" to name,
         "category" to category,
+        "isin" to isin,
         "link" to link,
         "amount" to amount,
         "roi" to roi,
@@ -62,6 +64,7 @@ data class Investment(
             return Investment(
                 name = parseString("name", "nombre"),
                 category = if (Categories.isValid(cat)) cat else "Otros",
+                isin = parseString("isin"),
                 link = parseString("link", "enlace"),
                 amount = parseDouble(map["amount"] ?: map["invertido"] ?: map["cantidad"]),
                 roi = parseDouble(map["roi"] ?: map["rentabilidad"]),

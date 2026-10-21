@@ -11,5 +11,13 @@ object Categories {
         "Depositos"
     )
 
+    val ISIN_SUPPORTED = setOf(
+        "Fondos idx",
+        "ETF",
+        "Acciones"
+    )
+
     fun isValid(category: String): Boolean = ALL.contains(category)
+
+    fun supportsIsin(category: String): Boolean = ISIN_SUPPORTED.contains(category)
 }

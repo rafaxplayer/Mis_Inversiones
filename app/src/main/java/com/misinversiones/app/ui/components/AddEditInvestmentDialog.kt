@@ -37,6 +37,7 @@ fun AddEditInvestmentDialog(
 ) {
     var name by remember { mutableStateOf(initialInvestment?.name ?: "") }
     var category by remember { mutableStateOf(initialInvestment?.category ?: "Otros") }
+    var isin by remember { mutableStateOf(initialInvestment?.isin ?: "") }
     var link by remember { mutableStateOf(initialInvestment?.link ?: "") }
     var amountText by remember { mutableStateOf(initialInvestment?.amount?.toString() ?: "") }
     var roiText by remember { mutableStateOf(initialInvestment?.roi?.toString() ?: "") }
@@ -108,6 +109,19 @@ fun AddEditInvestmentDialog(
                             )
                         }
                     }
+                }
+
+                if (Categories.supportsIsin(category)) {
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    OutlinedTextField(
+                        value = isin,
+                        onValueChange = { isin = it },
+                        label = { Text("ISIN (opcional)") },
+                        placeholder = { Text("ej. ES0123456789") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -224,9 +238,12 @@ fun AddEditInvestmentDialog(
                         return@TextButton
                     }
 
+                    val finalIsin = if (Categories.supportsIsin(category)) isin.trim() else ""
+
                     val updated = Investment(
                         name = name,
                         category = category,
+                        isin = finalIsin,
                         link = link,
                         amount = amount,
                         roi = roi,

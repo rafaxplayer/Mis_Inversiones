@@ -2,8 +2,6 @@ package com.misinversiones.app.ui.screens
 
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -53,6 +51,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 import com.misinversiones.app.data.model.Investment
@@ -120,18 +119,18 @@ fun PortfolioScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     SummaryCard(
-                        title = "Total Invertido",
+                        title = "Invertido",
                         value = String.format(Locale.US, "%.2f €", totalInvested),
                         modifier = Modifier.weight(1f)
                     )
                     SummaryCard(
-                        title = "Beneficio Total",
+                        title = "Beneficio",
                         value = String.format(Locale.US, "%.2f €", totalProfit),
                         valueColor = if (totalProfit >= 0) ProfitGreen else LossRed,
                         modifier = Modifier.weight(1f)
                     )
                     SummaryCard(
-                        title = "Rentabilidad Global",
+                        title = "Rentabilidad",
                         value = String.format(Locale.US, "%.2f %%", globalRoi),
                         valueColor = if (globalRoi >= 0) ProfitGreen else LossRed,
                         modifier = Modifier.weight(1f)
@@ -335,10 +334,27 @@ private fun SummaryCard(
         colors = CardDefaults.elevatedCardColors(containerColor = DarkCard),
         modifier = modifier
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
-            Text(title, style = MaterialTheme.typography.labelSmall, color = TextSecondary)
+        Column(
+            modifier = Modifier.padding(10.dp),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.labelSmall,
+                color = TextSecondary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(value, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = valueColor)
+            Text(
+                text = value,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold,
+                color = valueColor,
+                maxLines = 1,
+                softWrap = false,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
@@ -349,20 +365,30 @@ private fun DistributionRow(
     amount: Double,
     percentage: Double
 ) {
-    Column(modifier = Modifier.padding(vertical = 4.dp)) {
+    Column(modifier = Modifier.padding(vertical = 6.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(label, style = MaterialTheme.typography.bodyMedium, color = TextPrimary)
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyMedium,
+                color = TextPrimary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = String.format(Locale.US, "%.2f € (%.1f%%)", amount, percentage * 100.0),
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
-                color = TextSecondary
+                color = TextSecondary,
+                maxLines = 1,
+                softWrap = false
             )
         }
-        Spacer(modifier = Modifier.height(2.dp))
+        Spacer(modifier = Modifier.height(4.dp))
         LinearProgressIndicator(
             progress = { percentage.toFloat().coerceIn(0f, 1f) },
             modifier = Modifier
